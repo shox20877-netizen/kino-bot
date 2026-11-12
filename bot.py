@@ -4,7 +4,7 @@ import os
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 # 1. BOT TOKENINGIZ
-TOKEN = "8574631606:AAF4DTrXGtgp9p1z03vyIR0kKVZUhbJ1srA"
+TOKEN = "8574631606:AAGIQIXSh8iW1VigMq3ZLnvg_pZlsWUimM0"
 bot = telebot.TeleBot(TOKEN)
 
 # 2. ADMIN ID RAQAMINGIZ
