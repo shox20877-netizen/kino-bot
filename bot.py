@@ -1,6 +1,8 @@
 import telebot
 import json
 import os
+import threading
+from flask import Flask
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 # 1. BOT TOKENINGIZ
@@ -9,6 +11,21 @@ bot = telebot.TeleBot(TOKEN)
 
 # 2. ADMIN ID RAQAMINGIZ
 ADMIN_ID = 1302032021
+
+# --- RENDER UCHUN WEB SERVER (Port ochish uchun) ---
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot ishlayapti!"
+
+def run_web():
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
+
+# Veb-serverni alohida oqimda ishga tushiramiz
+threading.Thread(target=run_web).start()
+
 
 # Fayl nomlari
 CHANNELS_FILE = "channels.json"
@@ -90,7 +107,6 @@ def admin_actions(message):
     user_id = message.from_user.id
     text = message.text
 
-    # Agar admin video tashlagandan keyin unga kod va nom yuborayotgan bo'lsa:
     if user_id in KUTISH_ZONASI:
         if "|" not in text:
             bot.send_message(message.chat.id, "❌ Xato format! Quyidagicha yuboring:\n`Kod | Kino nomi`\nMisol: `1 | Avatar 2`", parse_mode="Markdown")
@@ -274,6 +290,7 @@ def kino_qidirish(message):
         bot.reply_to(message, "❌ Bunday kodli kino topilmadi. Iltimos, to'g'ri kino kodini kiriting!")
 
 # --- BOTNI ISHGA TUSHIRISH ---
-print("Bot ishga tushdi...")
-bot.remove_webhook()
-bot.infinity_polling(none_stop=True)
+if __name__ == "__main__":
+    print("Bot ishga tushdi...")
+    bot.remove_webhook()
+    bot.infinity_polling(none_stop=True)
